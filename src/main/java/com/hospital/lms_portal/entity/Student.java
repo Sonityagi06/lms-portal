@@ -49,7 +49,7 @@ public class Student {
 	private String passwordHash;
 	
 	@NotNull(message="Enrollment year required")
-	private String enrollYear;
+	private Integer enrollYear;
 	
 	
 	@NotNull(message="Semester required")
@@ -118,12 +118,12 @@ public class Student {
 		this.passwordHash = passwordHash;
 	}
 
-	public String getEnrollYear() {
+	public @NotNull(message = "Enrollment year required") Integer getEnrollYear() {
 		return enrollYear;
 	}
 
-	public void setEnrollYear(String enrollYear) {
-		this.enrollYear = enrollYear;
+	public void setEnrollYear(Integer integer) {
+		this.enrollYear = integer;
 	}
 
 	public Integer getSemester() {

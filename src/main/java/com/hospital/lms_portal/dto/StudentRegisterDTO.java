@@ -19,6 +19,11 @@ public class StudentRegisterDTO {
 	@NotBlank
 	private String phone;
 	
+	@NotBlank
+	private String password;
+	
+	
+
 	@NotNull
 	private Integer enrollYear;
 	
@@ -104,6 +109,14 @@ public class StudentRegisterDTO {
 
 	public void setDob(LocalDate dob) {
 		this.dob = dob;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	
