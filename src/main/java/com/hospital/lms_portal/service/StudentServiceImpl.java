@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.hospital.lms_portal.dto.StudentLoginDTO;
 import com.hospital.lms_portal.dto.StudentRegisterDTO;
 import com.hospital.lms_portal.entity.Student;
 import com.hospital.lms_portal.repository.StudentRepository;
+import com.hospital.lms_portal.security.JwtUtil;
 
 @Service
 public class StudentServiceImpl implements StudentService{
@@ -20,6 +22,9 @@ public class StudentServiceImpl implements StudentService{
 	private PasswordEncoder passwordEncoder;
 	
 
+	@Autowired
+	private JwtUtil jwtUtil;
+	
 	@Override
 	public Student registerStudent(StudentRegisterDTO dto) {
 		
@@ -46,5 +51,19 @@ public class StudentServiceImpl implements StudentService{
 		
 		return studentRepository.save(student);
 	}
+
+	@Override
+	public String loginStudent(StudentLoginDTO dto) {
+		
+		Student student = studentRepository.findByRollNumber(dto.getRollNumber())
+				.orElseThrow(() -> new RuntimeException("Student not found"));
+		
+		if(!passwordEncoder.matches(dto.getPassword(), student.getPasswordHash())) {
+			throw new RuntimeException("Invalid password");
+		}
+		return jwtUtil.generateToken(student.getRollNumber(), "STUDENT");
+	}
+	
+	
 	
 }
