@@ -1,0 +1,11 @@
+package com.hospital.lms_portal.security;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+public class TestBcrypt {
+
+	 public static void main(String[] args) {
+	        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	        System.out.println(encoder.encode("harsh1234"));
+	    }
+}

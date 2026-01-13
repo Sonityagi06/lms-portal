@@ -1,10 +1,17 @@
 package com.hospital.lms_portal.entity;
 
+import java.time.LocalDateTime;
+
+import com.hospital.lms_portal.security.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
@@ -12,15 +19,18 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(
-		name ="faculty_personal",
+		name ="faculty",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames ="email")
 		})
-public class FacultyPersonal {
+public class Faculty {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
+	
+	 @Column(unique = true, nullable = false)
+	    private String facultyCode;
 	
 	@NotBlank(message="Faculty name is required")
 	private String name;
@@ -41,6 +51,40 @@ public class FacultyPersonal {
 	
 	@NotBlank(message = "Department is required")
 	private String department;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Role role = Role.FACULTY;
+	
+	private LocalDateTime createdAt;
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = LocalDateTime.now();
+	} 
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	
+	public String getFacultyCode() {
+		return facultyCode;
+	}
+
+	public void setFacultyCode(String facultyCode) {
+		this.facultyCode = facultyCode;
+	}
 
 	public Long getId() {
 		return id;

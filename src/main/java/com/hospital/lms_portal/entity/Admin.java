@@ -1,10 +1,17 @@
 package com.hospital.lms_portal.entity;
 
+import java.time.LocalDateTime;
+
+import com.hospital.lms_portal.security.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
@@ -22,8 +29,9 @@ public class Admin {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	 @Column(unique = true)
 	@NotBlank(message="Admin name is required")
-	private String name;
+	private String username;
 	
 	@Email(message="Invalid email")
 	@NotBlank(message = "Email is required")
@@ -33,6 +41,33 @@ public class Admin {
 	@Column(name="password_hash")
 	private String passwordHash;
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable =false)
+	private Role role = Role.ADMIN;
+	
+	 private LocalDateTime createdAt;
+	 
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = LocalDateTime.now();
+	}
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -41,12 +76,12 @@ public class Admin {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return username;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUserName(String name) {
+		this.username = name;
 	}
 
 	public String getEmail() {

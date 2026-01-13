@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +18,13 @@ import com.hospital.lms_portal.dto.StudentRegisterDTO;
 import com.hospital.lms_portal.entity.Student;
 import com.hospital.lms_portal.service.StudentService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth/student")
-public class AuthController {
+@SecurityRequirement(name = "bearerAuth")
+public class StudentAuthController {
 
 	@Autowired
 	private StudentService studentService;
@@ -28,7 +32,7 @@ public class AuthController {
 	@PostMapping("/register")
 	public ResponseEntity<?> registerStudent(@Valid @RequestBody StudentRegisterDTO dto){
 		
-		System.out.println("DTO DATA = " + dto);
+		
 		Student student = studentService.registerStudent(dto);
 		
 		Map<String, Object> response = new HashMap<>();
@@ -51,5 +55,12 @@ public class AuthController {
 		response.put("roll_number", dto.getRollNumber());
 		
 		return ResponseEntity.ok(response);
+	}
+	
+	@PreAuthorize("hasRole('STUDENT')")
+	@GetMapping("/profile")
+	public Student getProfile() {
+		
+		return new Student();
 	}
 }
