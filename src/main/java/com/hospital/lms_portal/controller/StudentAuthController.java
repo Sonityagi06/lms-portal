@@ -61,6 +61,6 @@ public class StudentAuthController {
 	@GetMapping("/profile")
 	public Student getProfile() {
 		
-		return new Student();
+		return studentService.getProfile();
 	}
 }

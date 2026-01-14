@@ -57,4 +57,14 @@ public class JwtUtil {
 				.getExpiration()
 				.before(new Date());
 	}
+	
+	public boolean validateToken(String token) {
+		try {
+			extractAllClaims(token);
+			return true;
+		}
+		catch(Exception e) {
+			return false;
+		}
+	}
 }
