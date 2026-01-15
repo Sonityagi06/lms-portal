@@ -14,6 +14,8 @@ import com.hospital.lms_portal.dto.StudentLoginDTO;
 import com.hospital.lms_portal.dto.StudentRegisterDTO;
 import com.hospital.lms_portal.dto.StudentUpdateDTO;
 import com.hospital.lms_portal.entity.Student;
+import com.hospital.lms_portal.exception.InvalidCredentialsException;
+import com.hospital.lms_portal.exception.StudentNotFoundException;
 import com.hospital.lms_portal.repository.StudentRepository;
 import com.hospital.lms_portal.security.JwtUtil;
 
@@ -35,7 +37,7 @@ public class StudentServiceImpl implements StudentService{
 		
 		studentRepository.findByRollNumber(dto.getRollNumber())
 		.ifPresent(s -> {
-			throw new RuntimeException("Roll number already exists");
+			throw new StudentNotFoundException("Roll number already exists");
 		});
 		
 		Student student = new Student();
@@ -61,10 +63,10 @@ public class StudentServiceImpl implements StudentService{
 	public String loginStudent(StudentLoginDTO dto) {
 		
 		Student student = studentRepository.findByRollNumber(dto.getRollNumber())
-				.orElseThrow(() -> new RuntimeException("Student not found"));
+				.orElseThrow(() -> new StudentNotFoundException("Student not found"));
 		
 		if(!passwordEncoder.matches(dto.getPassword(), student.getPasswordHash())) {
-			throw new RuntimeException("Invalid password");
+			throw new InvalidCredentialsException("Invalid password");
 		}
 		return jwtUtil.generateToken(student.getRollNumber(), "STUDENT");
 	}
@@ -81,7 +83,7 @@ public class StudentServiceImpl implements StudentService{
 		String rollNumber = authentication.getName();
 		
 		return studentRepository.findByRollNumber(rollNumber)
-				.orElseThrow(() -> new RuntimeException("Student not found"));
+				.orElseThrow(() -> new StudentNotFoundException("Student not found"));
 		
 	}
 
@@ -90,7 +92,7 @@ public class StudentServiceImpl implements StudentService{
 		
 		
 		Student student = studentRepository.findByRollNumber(rollNumber)
-				.orElseThrow(() -> new RuntimeException("Student not found"));
+				.orElseThrow(() -> new StudentNotFoundException("Student not found"));
 		
 		if(dto.getName() !=null)
 			student.setName(dto.getName());
@@ -125,10 +127,10 @@ public class StudentServiceImpl implements StudentService{
 				.getName();
 		
 		Student student = studentRepository.findByRollNumber(rollNumber)
-				.orElseThrow(() -> new RuntimeException("Student not found"));
+				.orElseThrow(() -> new StudentNotFoundException("Student not found"));
 		
 		if(!passwordEncoder.matches(dto.getOldPassword(), student.getPasswordHash())) {
-			throw new RuntimeException("Old password is incorrect");
+			throw new InvalidCredentialsException("Old password is incorrect");
 		}
 		
 		student.setPasswordHash(passwordEncoder.encode(dto.getNewPassword()));
