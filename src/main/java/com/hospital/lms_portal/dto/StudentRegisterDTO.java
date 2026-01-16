@@ -39,6 +39,11 @@ public class StudentRegisterDTO {
 	private LocalDate dob;
 
 	
+	
+	public StudentRegisterDTO() {
+		super();
+	}
+
 	public String getRollNumber() {
 		return rollNumber;
 	}

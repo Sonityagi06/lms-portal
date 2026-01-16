@@ -10,6 +10,12 @@ public class StudentLoginDTO {
 	@NotBlank
 	private String password;
 
+	
+	
+	public StudentLoginDTO() {
+		super();
+	}
+
 	public String getRollNumber() {
 		return rollNumber;
 	}

@@ -21,9 +21,12 @@ import com.hospital.lms_portal.entity.Student;
 import com.hospital.lms_portal.repository.StudentRepository;
 import com.hospital.lms_portal.service.FacultyService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name="Faculty APIs", description="Faculty authentication and student access APIs")
 @RestController
 @RequestMapping("/api/auth/faculty")
 @SecurityRequirement(name = "bearerAuth")
@@ -35,6 +38,7 @@ public class FacultyAuthController {
 	@Autowired
 	private FacultyService facultyService;
 	
+	@Operation(summary = "Register new faculty")
 	@PostMapping("/register")
 	public ResponseEntity<?> registerFaculty(@Valid @RequestBody FacultyRegisterDTO dto){
 		Faculty faculty = facultyService.registerFaculty(dto);
@@ -48,6 +52,8 @@ public class FacultyAuthController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
+	
+	@Operation(summary = "Faculty login")
 	@PostMapping("/login")
 	public ResponseEntity<?> loginFaculty(@Valid @RequestBody FacultyLoginDTO dto){
 		String token = facultyService.loginFaculty(dto);
@@ -61,6 +67,7 @@ public class FacultyAuthController {
 		return ResponseEntity.ok(response);
 	}
 	
+	@Operation(summary = "Get all students (Faculty only)")
 	@PreAuthorize("hasRole('FACULTY')")
 	@GetMapping("/students")
 	public List<Student> getStudents(){

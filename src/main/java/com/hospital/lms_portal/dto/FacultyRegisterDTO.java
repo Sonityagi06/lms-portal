@@ -26,6 +26,12 @@ public class FacultyRegisterDTO {
 	@NotBlank
 	private String department;
 
+	
+	
+	public FacultyRegisterDTO() {
+		super();
+	}
+
 	public String getFacultyCode() {
 		return facultyCode;
 	}

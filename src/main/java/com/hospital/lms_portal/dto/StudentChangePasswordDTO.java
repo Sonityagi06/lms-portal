@@ -10,6 +10,12 @@ public class StudentChangePasswordDTO {
 	@NotBlank
 	private String newPassword;
 
+	
+	
+	public StudentChangePasswordDTO() {
+		super();
+	}
+
 	public String getOldPassword() {
 		return oldPassword;
 	}

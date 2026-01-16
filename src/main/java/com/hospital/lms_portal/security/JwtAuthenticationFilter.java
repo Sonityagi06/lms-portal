@@ -1,7 +1,5 @@
 package com.hospital.lms_portal.security;
 
-
-
 import java.io.IOException;
 import java.util.Collections;
 
@@ -24,12 +22,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+	
+	
 	@Override
 	protected void doFilterInternal(
 			HttpServletRequest request,
 			HttpServletResponse response,
 			FilterChain filterChain)
 	        throws ServletException , IOException{
+	
+		
+		//Stop JWT filter for Swagger
+		String path = request.getRequestURI();
+		
+		if(path.startsWith("/v3/api-docs")
+				|| path.startsWith("/swagger-ui")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
 		
 		String authHeader = request.getHeader("Authorization");
 		

@@ -9,6 +9,12 @@ public class AdminLoginDTO {
 	
 	@NotBlank
 	private String password;
+	
+	
+
+	public AdminLoginDTO() {
+		super();
+	}
 
 	public String getUsername() {
 		return username;

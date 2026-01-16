@@ -16,7 +16,6 @@ public class SwaggerConfig {
 	public OpenAPI openAPI() {
 		
 		SecurityScheme securityScheme = new SecurityScheme()
-				.name("Authorization")
 				.type(SecurityScheme.Type.HTTP)
 				.scheme("bearer")
 				.bearerFormat("JWT");
@@ -31,9 +30,9 @@ public class SwaggerConfig {
 						.version("1.0")
 						
 						)
-				.addSecurityItem(securityRequirement)
-				.components(
-						new io.swagger.v3.oas.models.Components()
+			.addSecurityItem(securityRequirement)
+			.components(
+					new io.swagger.v3.oas.models.Components()
 						.addSecuritySchemes("bearerAuth", securityScheme)
 						);
 

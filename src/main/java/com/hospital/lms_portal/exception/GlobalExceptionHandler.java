@@ -6,7 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+@RestControllerAdvice(
+		basePackages = "com.hospital.lms.portal.controller")
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(StudentNotFoundException.class)
@@ -44,12 +45,11 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ApiError> handleGenericException(Exception ex){
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<ApiError> handleRuntimeException(RuntimeException ex){
 		
 		ApiError error = new ApiError(
-				HttpStatus.INTERNAL_SERVER_ERROR.value(),
-				"Something went wrong");
+				500,ex.getMessage());
 		return new ResponseEntity<>(error,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

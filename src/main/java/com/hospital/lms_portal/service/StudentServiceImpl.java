@@ -88,9 +88,12 @@ public class StudentServiceImpl implements StudentService{
 	}
 
 	@Override
-	public Student updateProfile(String rollNumber, StudentUpdateDTO dto) {
+	public Student updateProfile(StudentUpdateDTO dto) {
 		
-		
+		String rollNumber = SecurityContextHolder
+				.getContext()
+				.getAuthentication()
+				.getName();
 		Student student = studentRepository.findByRollNumber(rollNumber)
 				.orElseThrow(() -> new StudentNotFoundException("Student not found"));
 		

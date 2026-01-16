@@ -18,6 +18,11 @@ public class StudentUpdateDTO {
 	
 	private LocalDate dob;
 	
+	
+
+	public StudentUpdateDTO() {
+		super();
+	}
 
 	public String getName() {
 		return name;

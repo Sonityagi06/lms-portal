@@ -10,6 +10,11 @@ public class FacultyLoginDTO {
 	@NotBlank
 	private String password;
 
+	
+	public FacultyLoginDTO() {
+		super();
+	}
+
 	public String getFacultyCode() {
 		return facultyCode;
 	}

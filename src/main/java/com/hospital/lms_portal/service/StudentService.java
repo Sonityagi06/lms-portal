@@ -16,7 +16,7 @@ public interface StudentService {
 	
 	Student getProfile();
 	
-	Student updateProfile(String rollNumber, StudentUpdateDTO dto);
+	Student updateProfile( StudentUpdateDTO dto);
 	
 	void changePassword(StudentChangePasswordDTO dto);
 	
