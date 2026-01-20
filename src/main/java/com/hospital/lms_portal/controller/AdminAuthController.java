@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.lms_portal.dto.AdminLoginDTO;
+import com.hospital.lms_portal.entity.Faculty;
 import com.hospital.lms_portal.entity.Student;
 import com.hospital.lms_portal.service.AdminService;
+import com.hospital.lms_portal.service.FacultyService;
 import com.hospital.lms_portal.service.StudentService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +39,9 @@ public class AdminAuthController {
 	
 	@Autowired
 	private StudentService studentService;
+	
+	@Autowired
+	private FacultyService facultyService;
 	
 	@Operation(summary = "Admin Login")
 	@ApiResponses({
@@ -72,5 +77,11 @@ public class AdminAuthController {
 	public List<Student> getStudents(@RequestParam(required = false) String branch , @RequestParam(required= false) Integer semester){
 		
 		return studentService.getAllStudents(branch, semester);
+	}
+	
+	@GetMapping("/faculties")
+	public ResponseEntity<List<Faculty>> getFaculties(@RequestParam(required =false) String department){
+		
+		return ResponseEntity.ok(facultyService.getFacultyList(department));
 	}
 }

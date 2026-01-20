@@ -9,12 +9,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.lms_portal.dto.FacultyLoginDTO;
+import com.hospital.lms_portal.dto.FacultyProfessionalDTO;
+import com.hospital.lms_portal.dto.FacultyProfessionalUpdateDTO;
 import com.hospital.lms_portal.dto.FacultyRegisterDTO;
 import com.hospital.lms_portal.entity.Faculty;
 import com.hospital.lms_portal.entity.Student;
@@ -75,6 +78,24 @@ public class FacultyAuthController {
 		return studentRepo.findAll();
 	}
 	
+	
+	@PreAuthorize("hasRole('FACULTY')")
+	@GetMapping("/profile")
+	public ResponseEntity<FacultyProfessionalDTO> getProfile(){
+		
+		return ResponseEntity.ok(facultyService.getFacultyProfessionalDTO());
+	}
+	
+	
+	@PreAuthorize("hasRole('FACULTY')")
+	@PatchMapping("/professional")
+	public ResponseEntity<String> saveProfessional(
+			@Valid
+			@RequestBody FacultyProfessionalUpdateDTO dto){
+		
+		facultyService.saveOrUpdateProfessional(dto);
+		return ResponseEntity.ok("Professional profile updated");
+	}
 	
 
 }

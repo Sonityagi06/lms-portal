@@ -1,14 +1,21 @@
 package com.hospital.lms_portal.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hospital.lms_portal.dto.FacultyLoginDTO;
+import com.hospital.lms_portal.dto.FacultyProfessionalDTO;
+import com.hospital.lms_portal.dto.FacultyProfessionalUpdateDTO;
 import com.hospital.lms_portal.dto.FacultyRegisterDTO;
 import com.hospital.lms_portal.entity.Faculty;
+import com.hospital.lms_portal.entity.FacultyProfessional;
+import com.hospital.lms_portal.repository.FacultyProfessionalRepository;
 import com.hospital.lms_portal.repository.FacultyRepository;
 import com.hospital.lms_portal.security.JwtUtil;
 import com.hospital.lms_portal.security.Role;
@@ -21,6 +28,9 @@ public class FacultyServiceImpl implements FacultyService{
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private FacultyProfessionalRepository facultyProRepo;
 	
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -57,4 +67,55 @@ public class FacultyServiceImpl implements FacultyService{
 		return jwtUtil.generateToken(f.getFacultyCode(), "FACULTY");
 	}
 
+
+
+	@Override
+	public Faculty getLoggedInFaculty() {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String facultyCode = authentication.getName();
+		
+		
+		return facultyRepo.findByFacultyCode(facultyCode).orElseThrow(() -> new RuntimeException("Logged-in faculty not found"));
+	}
+
+	
+	@Override
+	public List<Faculty> getFacultyList(String department) {
+		
+		if(department == null || department.isBlank()) {
+			return facultyRepo.findAll();
+		}
+		return facultyRepo.findByDepartment(department);
+	}
+
+	
+
+	@Override
+	public FacultyProfessionalDTO getFacultyProfessionalDTO() {
+		
+		Faculty faculty = getLoggedInFaculty();
+		
+		FacultyProfessional prof = facultyProRepo.findByFaculty(faculty)
+				.orElse(null);
+		return new FacultyProfessionalDTO(faculty, prof);
+	}
+	
+	@Override
+	public void saveOrUpdateProfessional(FacultyProfessionalUpdateDTO dto) {
+		
+		Faculty faculty = getLoggedInFaculty();
+		
+		FacultyProfessional prof = facultyProRepo.findByFaculty(faculty)
+				.orElse(new FacultyProfessional());
+		
+		prof.setQualification(dto.getQualification());
+		prof.setExperienceYears(dto.getExperienceYears());
+		prof.setSpecialization(dto.getSpecialization());
+		prof.setFaculty(faculty);
+		
+		facultyProRepo.save(prof);
+
+	}
 }
