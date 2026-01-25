@@ -1,12 +1,14 @@
 package com.hospital.lms_portal.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hospital.lms_portal.dto.AssignSubjectDTO;
 import com.hospital.lms_portal.dto.FacultySubjectResponseDTO;
+import com.hospital.lms_portal.dto.SubjectResponseDTO;
 import com.hospital.lms_portal.entity.Faculty;
 import com.hospital.lms_portal.entity.FacultySubject;
 import com.hospital.lms_portal.entity.Subject;
@@ -25,6 +27,10 @@ public class FacultySubjectServiceImpl implements FacultySubjectService{
 	
 	@Autowired
 	private FacultySubjectRepository facultySubjectRepository;
+	
+	@Autowired
+	private FacultyService facultyService;
+	
 	@Override
 	public FacultySubjectResponseDTO assignSubjectToFaculty(AssignSubjectDTO dto) {
 		
@@ -52,6 +58,27 @@ public class FacultySubjectServiceImpl implements FacultySubjectService{
 		response.setActive(saved.getActive());
 		
 		return response;
+	}
+	
+	
+	@Override
+	public List<SubjectResponseDTO> getMySubjects() {
+		
+		Faculty faculty = facultyService.getLoggedInFaculty();
+		
+		List<FacultySubject> mappings = facultySubjectRepository.findByFacultyAndActiveTrue(faculty);
+		
+		
+		return mappings.stream()
+				.map(mapping -> {
+					SubjectResponseDTO dto = new SubjectResponseDTO();
+					dto.setId(mapping.getSubject().getId());
+					dto.setSubjectCode(mapping.getSubject().getSubjectCode());
+					dto.setSubjectName(mapping.getSubject().getSubjectName());
+					
+					return dto;
+				})
+				.toList();
 	}
 
 }
